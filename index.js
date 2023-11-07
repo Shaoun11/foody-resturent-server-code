@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 
@@ -30,7 +30,8 @@ async function run() {
     await client.connect();
     // Send a ping to confirm a successful connection
 
-    const database = client.db("fooddata").collection("allfoods")
+    const database = client.db("fooddata").collection("allfoods");
+    const orderdatabase = client.db("fooddata").collection("order");
 
 
     app.get("/allfoods", async (req, res) => {
@@ -49,6 +50,50 @@ async function run() {
         const total= await database.countDocuments();
         res.send({result,total});
       });
+
+      app.get("/foods/:_id",async(req,res)=>{
+        const id=req.params._id;
+        const query={
+            _id:new ObjectId(id)
+        }
+        const result=await database.findOne(query);
+        res.send(result);
+      })
+
+       //post data order
+    app.post("/order", async (req, res) => {
+      const order = req.body;
+      const result = await orderdatabase.insertOne(order);
+      console.log(result);
+      res.send(result);
+    });
+
+     //get order data
+     app.get("/order", async (req, res) => {
+      const result = await orderdatabase.find().toArray();
+      res.send(result);
+    });
+
+    //updated sell data
+    app.put("/foods/:_id", async (req, res) => {
+      const id = req.params._id;
+      const data = req.body;
+      console.log("id", id, data);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedata = {
+        $set: {
+          order:data.order
+        },
+        
+      };
+      const result = await database.updateOne(filter,updatedata,options);
+      console.log(result);
+      res.send(result);
+     
+    });
+
+      
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
