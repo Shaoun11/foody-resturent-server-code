@@ -60,7 +60,23 @@ async function run() {
         res.send(result);
       })
 
-       //post data order
+
+    //add food data
+
+    app.post("/allfoods", async (req, res) => {
+      const order = req.body;
+      const result = await database.insertOne(order);
+      console.log(result);
+      res.send(result);
+    });
+
+    //get myadded data
+    app.get("/addedfood", async (req, res) => {
+      const result = await database.find().toArray();
+      res.send(result);
+    });
+
+    //post data order
     app.post("/order", async (req, res) => {
       const order = req.body;
       const result = await orderdatabase.insertOne(order);
@@ -93,7 +109,7 @@ async function run() {
      
     // });
 
-    
+
      //delete  orderd data 
   app.delete("/order/:_id", async (req, res) => {
     const id = req.params._id;
