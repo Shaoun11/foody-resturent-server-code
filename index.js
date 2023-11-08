@@ -81,8 +81,8 @@ async function run() {
     });
 
     //get user data
-    app.get("/addedfood", async (req, res) => {
-      const result = await database.find().toArray();
+    app.get("/user", async (req, res) => {
+      const result = await userdatabase.find().toArray();
       res.send(result);
     });
 
