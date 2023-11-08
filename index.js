@@ -74,24 +74,36 @@ async function run() {
       res.send(result);
     });
 
-    //updated sell data
-    app.put("/foods/:_id", async (req, res) => {
-      const id = req.params._id;
-      const data = req.body;
-      console.log("id", id, data);
-      const filter = { _id: new ObjectId(id) };
-      const options = { upsert: true };
-      const updatedata = {
-        $set: {
-          order:data.order
-        },
+    // //updated sell data
+    // app.put("/foods/:_id", async (req, res) => {
+    //   const id = req.params._id;
+    //   const data = req.body;
+    //   console.log("id", id, data);
+    //   const filter = { _id: new ObjectId(id) };
+    //   const options = { upsert: true };
+    //   const updatedata = {
+    //     $set: {
+    //       order:data.order
+    //     },
         
-      };
-      const result = await database.updateOne(filter,updatedata,options);
-      console.log(result);
-      res.send(result);
+    //   };
+    //   const result = await database.updateOne(filter,updatedata,options);
+    //   console.log(result);
+    //   res.send(result);
      
-    });
+    // });
+
+    
+     //delete  orderd data 
+  app.delete("/order/:_id", async (req, res) => {
+    const id = req.params._id;
+    const query = {
+      _id: new ObjectId(id),
+    };
+    const result = await orderdatabase.deleteOne(query);
+    console.log(result);
+    res.send(result);
+  });
 
       
 
