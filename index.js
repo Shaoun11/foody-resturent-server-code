@@ -32,6 +32,7 @@ async function run() {
 
     const database = client.db("fooddata").collection("allfoods");
     const orderdatabase = client.db("fooddata").collection("order");
+    const userdatabase = client.db("fooddata").collection("userdata");
 
 
     app.get("/allfoods", async (req, res) => {
@@ -69,6 +70,22 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
+    //add mongodb user data
+
+    app.post("/user", async (req, res) => {
+      const user = req.body;
+      const result = await userdatabase.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
+
+    //get user data
+    app.get("/addedfood", async (req, res) => {
+      const result = await database.find().toArray();
+      res.send(result);
+    });
+
 
     //get myadded data
     app.get("/addedfood", async (req, res) => {
