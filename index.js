@@ -120,7 +120,7 @@ async function run() {
 
     //add food data
 
-    app.post("/allfoods", async logger,verifyToken (req, res) => {
+    app.post("/allfoods", async  (req, res) => {
       const order = req.body;
       const result = await database.insertOne(order);
       console.log(result);
@@ -153,7 +153,7 @@ async function run() {
   
 
     //get user data
-    app.get("/user", async (req, res) => {
+    app.get("/user",logger,verifyToken, async (req, res) => {
       const result = await userdatabase.find().toArray();
       res.send(result);
     });
